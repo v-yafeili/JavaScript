@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>解构赋值</title>
+</head>
+<script type="text/javascript">
+    // 基本数据类型
+    // number ,string .boolean,null ,undefined
+    // 引用数据类型
+    // object :{} [] /$/ ,date
+    // function
+    console.log(num);
+    //console.log(num1);
+    console.log(fn); //  整个函数定义输出
+    console.log(fn()); // 整个函数执行
+    var num = 12;
+    var obj = {name: 'dsf',age :7};
+    function fn() {
+        console.log('fdffd');
+    }
+    console.log(num);
+    console.log(fn); //  整个函数定义输出
+    console.log(fn()); // 整个函数执行
+
+    //1: 当浏览器加载html页面的时候，首先会提供一个全局的js代码执行全局作用域， （global/window）
+    // 2: 域解释（变量提声）
+    // 在当前的作用域中，JS 代码执行之前，浏览器首先会默认的把所有带var和function  的 进行提前声明或者定义
+    //  理解声明和定义
+    // var num =12
+    // 声明 （declare） var num ； 告诉浏览器在全局作用域中有一个num 变量;如果一个变量声明了但是没有定义，只是undefined
+    // 定义  （defined） =》给变量赋值
+    // 2） 对于带var和function 关键字的在预解释时候还是不一样的
+    //var -> 在预解释的时候只是提前声明
+    //function -> 在预解释的时候提前声明+预解释都完成了 ；
+    //3) 预解释 只发生在当前的作用域下，例如 开始只对window 下的进行预解释 ，只有函数执行的时候才会对函数中的进行预解释
+
+    //3 JS 中的 内存的分类 -》 全局作用域/私有的作用域
+    // 栈内存 ：用了提供一个共js代码执行的环境
+    // 堆内存 ：用来存储引用数据类型的值 -》对象存储的是属性名和属性值，函数存储的是代码字符串
+
+
+    // 1： 如何区分私有变量和全局变量？
+    // 1）在全局作用域下声明的变量是全局变量
+    //2） 在"私有作用域的声明的变量"和"函数的形参"都是私有变量
+    //  在私有作用域中，我们的代码执行的时候遇到一个变量，首先我们需要确定它是否是私有变量，如果是私有变量，那么和外面的没有任何关系，如果不是私有的，则往当前作用域的上级作用域查找，如果上级作用域也没有则继续查找，一直找到window 为止 ；，，，，（作用域链）
+
+
+    //2 当函数执行的时候（直接目的：让函数体重的代码执行），首先会形成一个新的私有的作用域， 然后按照如下的步骤执行：
+    // 1: 如有有形参，先给形参赋值
+    // 2: 进行私有域中的预解释
+    // 3: 私有域中的代码从上到下执行
+    // 4: ....
+    // 函数形成一个私有的作用域保护里面的私有变量不受外界的干扰（外面修改不了私有的，私有的也修改不了公共的） -》 闭包
+    console.log(total);
+    var  total =1;
+    function  fn2(num1,num2) {
+        console.log(total);
+        var total =num1+num2;
+        console.log(total);
+    }
+    fn2(100,200);
+</script>
+<body>
+<h1>预解释和 作用域链</h1>
+
+</body>
+</html>
