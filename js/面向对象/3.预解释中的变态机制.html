@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>预解释中的变态机制</title>
+</head>
+<script type="text/javascript">
+    //1 预解释的时候不管条件是否成立，都要把带var 的进行提前的声明
+    // window 预解释： var num 。=》 window.num
+    if(!('num' in window)){
+        var num =12 ;
+    }
+    console.log(num); //=>undefined
+
+    // 2 预解释的时候只预解释 '='左边的，右边的是值不参与预解释
+    //匿名函数之函数表达式：把函数定义的部分当做一个值赋值给我们的变量/元素的某一事件
+//    fn2();  //Uncaught TypeError: fn2 is not a function
+//    var  fn2 =function () {
+//        console.log('fn2');
+//    }
+//    fn();
+//    function fn() {
+//        console.log('fn');
+//    }
+//    fn();
+    //3 自定义函数在全局作用域下不进行预解释，当代码执行到位置的时候定义和执行一起完成
+    // 自执行函数： 定义和执行一起完成
+    (function (num) {})(100);
+    +function (num) {}(100);
+    -function (num) {}(100);
+    !function (num) {}(100);
+
+    //4, 函数体 return 下面的代码虽然不执行，但是需要进行预解释,return 后面跟的都是我们的返回值，所有不进行预解释
+    function fn3() {
+        console.log(num3);  //=> undef
+        return function () {
+
+        };
+        var num3 = 100;
+    }
+    fn3();
+    // 5.在预解释的时候，如果名字已经声明过来，不需要重新的声明，但是需要重新的赋值
+    //预解释 ：var fn5 ；window.fn5 ; fn = xxxfff000 window = xxxffff000
+    // 在js 中如果变量的名字和函数的名字冲突了，也算冲突
+    //
+    var fn5 = 5;
+    function fn5() {
+
+    }
+
+    //========================
+    // window 预解释
+    // 声明+ 定义  fn= xxxfff111
+    // 声明  var fn  ；（不需要重新声明）
+    // 声明（不需要重复）+定义  fn =xxxfff222
+    console.log("=========fn6=======");
+    fn6();  // fn62
+    function fn6() {
+        console.log('fn61')
+    }
+    fn6() // fn62
+    var fn6 =10;
+    fn6(); // TypeError: fn6 is not a function
+    function fn6() {
+        console.log('fn62')
+    }
+    fn6()
+
+</script>
+<body>
+<h1> 预解释中的变态机制</h1>
+</body>
+</html>
