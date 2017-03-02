@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>工厂模式</title>
+</head>
+<body>
+<script type="text/javascript">
+    var  jsPerson = {
+        name:"xiaoxiao",
+        age: 77,
+        writeJs: function () {
+            console.log('my name is '+this.name+' and i can write js')
+        }
+    }
+    jsPerson.writeJs();
+    // 单例模式虽然解决了分组作用，但是不能实现批量生产，数据手工作业模式 -》'工厂模式'
+    //把实现同一件事情的相同的代码放到一个函数中，执行函数即可实现功能， ---》函数的封装
+    function creatJsPerson(name, age) {
+        var obj ={};
+        obj.name =name;
+        obj.age = age;
+        obj.writeJs = function () {
+            console.log('my name is ' + this.name + ' and i can write js')
+        };
+        return obj;
+    }
+    var p1 =creatJsPerson('p1',4);
+    p1.writeJs();
+
+    // JS 是一门轻量级的脚本的编程语言，（html，css 数据标记语言）
+    // 类 分装 继承 多态
+    // 多态： 当前方法的多种形态：后台语言中 包含重载 和重写
+    // js中不存在重载 ，方法名称一样后面的会把前面的覆盖掉，保留最后一个
+    // js 中有一个操作类似重载但不是重载：我们可以根据传递的参数不一样实现不同的功能
+    function sum(num) {
+        if(typeof num === 'undefined'){
+            return 0;
+        }
+        return num;
+    }
+    sum();
+</script>
+</body>
+</html>

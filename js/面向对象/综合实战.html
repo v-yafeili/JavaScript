@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>综合实战</title>
+</head>
+<body>
+<div class="box">
+    <div id="btn">点击我 <span id="spanname"></span></div>
+</div>
+<script type="text/javascript">
+    var obtn = document.getElementById('btn');
+    var  sapnnem = document.getElementById('spanname');
+    // 1 利用全局作用域不销毁的原理，把需要累加的 数据定义全局作用域；
+    //  弊端： 在项目中放置全局变量冲突，一般禁止或者减少使用全局变量
+    var count =0;
+    obtn.click= function () {
+        count ++;
+        sapnnem.innerHTML = count ;
+    }
+
+    // 2 自己形成一个不销毁的私有作用域来保存我们需要累加的数字
+    // 有一个不销毁的作用域 占内存
+    ~function () {
+        var count =0;
+        obtn.click= function () {
+            count ++;
+            sapnnem.innerHTML = count ;
+        }
+    }()
+
+    obtn.click= (function () {
+        var count =0;
+        return function () {
+            var count =0;
+            obtn.click= function () {
+                count ++;
+                sapnnem.innerHTML = count ;
+            }
+        }
+    })();
+
+
+    // 3 利用innerHtml 方式， 获取到到得是字符串
+    // 当重新添加的是浏览器都要重新渲染
+    obtn.click= function () {
+        sapnnem.innerHTML = sapnnem.innerHTML*1 +1 ;
+        sapnnem.innerHTML++;
+    }
+    //4 利用自定义属性存储（推荐方式）
+    obtn.count = 0;
+    obtn.click= function () {
+        sapnnem.innerHTML = ++ this.count;
+        //sapnnem.innerHTML =obtn.count ++ ;
+        //sapnnem.innerHTML++;
+    }
+
+</script>
+</body>
+</html>

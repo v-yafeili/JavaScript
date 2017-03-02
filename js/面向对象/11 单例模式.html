@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单例数据类型</title>
+</head>
+<body>
+<script type="text/javascript">
+    // 对象数据类型的作用：
+    // 把描述同一事物（同一对象）的属性和方法在一个内存空间下，起到分组的作用，这样不同的事物之间的属性即使属性名相同，互相也不乏发生冲突
+    // 我们把这种分组编写代码模式叫做单例模式
+    // -在单例模式中我们把person1 和person2 也叫做命名空间
+    var person1 ={
+        name : "",
+        age :""
+    }
+    var person2 ={
+        name :"",
+        age:""
+    }
+    // 单例模式 是项目中经常使用的模式，因为项目我们可以使用单例模式进行模块化开发
+
+    // 通用模块
+    var utils={
+        select: function () {
+
+        }
+    }
+    //页卡模块
+    var tabRender={
+        change: function () {
+            utils.select();
+        }
+    }
+    var searchRender = {
+        chang: function () {
+            this.clickEven();
+        },
+        clickEven: function () {
+
+        }
+    }
+</script>
+</body>
+</html>

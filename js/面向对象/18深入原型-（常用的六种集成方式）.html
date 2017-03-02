@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>18深入 原型（常用的六种反方式）</title>
+</head>
+<body>
+<script type="text/javascript">
+    Object.prototype.aaa = function () {
+
+    }
+    var obj = {name: 'test', age: 7};
+    for (var key in obj) {
+        console.log(key);
+//        for in 循环遍历的时候，默认的话可以把自己私有的 和 它所在原型上扩展的属性和方法遍历到，但是一般情况下 ，我们遍历一个对象只需要遍历私有的即可,我们可以使用一下判断进行处理
+        if (obj.propertyIsEnumerable(key)) {
+            console.log(key);
+
+        }
+        if (obj.hasOwnProperty(key)) {
+            console.log(key)
+        }
+    }
+
+    //    ========/
+    //Object.create(proObj);
+    //    创建一个新的对象，但是还要吧proObj作为这个对象的原型 ie6-8 不兼容
+//     自己实现一个 Object.create
+    function object(obj) {
+         function Fn() {
+
+         }
+         fn.prototype =obj;
+        return new fn();
+    }
+    var objo = {
+        getx: function () {
+
+        }
+    }
+    var obj2 = Object.create(objo);
+    //dir(obj2)
+    objo.getY = function () {
+        console.log('Y');
+    }
+    obj2.getY();
+
+
+    // 原型集成使我们 js 中最常用的一种继承方式
+    // 子类B 想要父类中A中所有的属性的方法 （私有 和共有）只需让B.prototype =new A; 即可；
+    // 原型集成的特点：他是把父类的+私有的和 共有的都继承到子类的共有属性上
+
+    // 核心： 原型继承并不是把父类中的属性和方法克隆一份一模一样的给B，而是让B 和A 之间增加原型链链接，以后B的实例想要a中的方法，只需要一级级的向上查找使用
+    //call 继承： 把父类的私有属性和方法，克隆一份一模一样的作为子类的属性
+    // 冒充对象继承： 把父类 私有的共有的的 克隆一份一模一样的给子类的私有的
+
+    // 混合模式集成： 原型集成+call 继承
+
+    // 寄生混合式集成：
+
+    // 中间类继承法
+
+</script>
+</body>
+</html>
