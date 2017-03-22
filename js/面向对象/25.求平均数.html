@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>求平均数</title>
+</head>
+<body>
+<script >
+    function avgFn() {
+       // arguments.sort()//arguments 是一个类数组，不能使用数组的方法
+        var ary = [];
+        for(var i=0 ;i< arguments.length;i++){
+            ary[length-1] =arguments[i];
+        }
+
+        ary = Array.prototype.slice.call(arguments)
+        // 排序
+        ary.sort(function (a,b) {
+            return a-b;
+        })
+        ary.shift();
+        ary.pop();
+        return (eval(ary.join('+'))).toFixed(2);
+    }
+
+</script>
+
+</body>
+</html>

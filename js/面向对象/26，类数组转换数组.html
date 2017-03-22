@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var divlist = document.getElementsByTagName('div');
+    console.log(divlist);  // HTMLCollection 元素集合的一个实例  类数组集合
+
+    var  nodelist = document.getElementsByName('test');
+
+    console.dir(nodelist)//Nodelist 节点集合，他是一个类// 组集合
+
+
+    var ary = Array.prototype.slice.call(nodelist);
+    console.log(ary);
+    // IE6-8  不兼容
+    //浏览器异常信息捕获
+    try {
+
+    }catch (e){
+        throw  new Error("当前网络繁忙");
+        new ReferenceError //=引用错误
+        new TypeError   //类型错误
+        new RangeError  // 范围错误
+    } finally {
+
+    }
+</script>
+</body>
+</html>

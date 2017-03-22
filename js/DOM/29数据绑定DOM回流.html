@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据绑定dom回流</title>
+</head>
+<body>
+<script type="text/javascript">
+    var oUl = document.getElementById('uuid');
+    /***
+     *  1 利用动态创建节点和把他追加到页面中的方式实现数据绑定
+     *   优势：把需要动态绑定的内容一个个的追加到页面中，对原来的元素没有任何影响
+     * */
+
+    var ary =[];
+//    for (var i= 0 ; i <ary.length ;i++ ){
+//        var cur = ary[i];
+//        var oli = document.createElement('li');
+//        oli.innerHTML = "<span>"+(i+4)+"</span>"+cur.title;
+//        oUl.appendChild(oli);
+//    }
+
+    /**
+     * 2. 字符串拼接方式：
+     *  字符串拼接最常用的一种绑定数据方式
+     * 弊端： 把新拼接的字符添加到uli，原有的三个li的鼠标滑过效果都消失了，（原来标签绑定的事件都消失了）
+     * */
+    var str =''
+    for (var i= 0 ; i <ary.length ;i++ ){
+        var cur = ary[i];
+        str += '<li>';
+        str += "<span>" +(i+4)_+"</spac>";
+        str +=  cur.title;
+        str += '</li>';
+
+    }
+     oUl.innerHTML += str;
+
+
+    // JS 中 DOM 深入知识：
+    // 回流 （重排 reflow） ： 当页面中的html结构发生改变（增加 删除元素，位置发生改变。。。） ；浏览器都需要重新计算一遍最新的DOM 结构，重新的对当前页面进行渲染
+    // 重绘：某一个元素的部分样式发生改变（背景颜色），浏览器只需要重新渲染当前元素即可
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>call 方法</title>
+</head>
+<body>
+<script>
+    var obj ={
+        name: 'lyf'
+    };
+    function  fn() {
+        console.log(this)
+    };
+    fn();
+    //obj.fn();
+    fn.call(obj);
+    /**
+     *  call 方法作用：
+     *  首先我们让原型上的call 方法执行，在执行call 方法的时候，我们让fn方法中this变成第一个参数obj，然后再fn这个函数执行
+     * */
+
+    //自己模拟内置call 方法，  深入探讨call 方法的执行原理
+    Function.prototype.mycall =function (context) {
+        // mycall 方法中的this 就是当前我要操作和改变this 关键字的函数名
+        // 1. 让fn 中的this关键字变为 context 的值
+        // 让 this 这个函数中的'this关键字' 执行context
+        var that =eval(this.toString().replace('this',context));
+
+        // 让fn 方法执行
+        this();
+    }
+
+
+    //================================================
+    function f1() {
+        console.log(1)
+    };
+    function f2() {
+        console.log(2)
+    }
+    f1.call(f2); //首先 f1 通过原型链机制找到Function.prototype上的call 并且让call 方法执行 ===》 此时call 这个方法中的this就是我们要操作的fn1 ==》 在 call 方法中执行首先让fn1中this关键字变成fn2 ,然后 在让fn1 这个方法执行
+
+    f1.call.call(f2);//首先 f1 通过原型链机制找到Function.prototype上的call ,然后让call方法通过原型在找到Function原型上的call（call本身的值也是一个函数，所有同样可以找到Function。prototype），
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>call 和apply 和bind</title>
+</head>
+<body>
+<script>
+    ' use  strict'  // 告诉当前浏览器 下面的js代码 按照严格模式编写
+
+    function  fn(num1,num2) {
+        console.log(num1+num2);
+        console.log(this);
+    }
+//    fn(100,200); //this :window  num1:100 num2:200
+//    fn.call(100,200); //this :100  num1:200 num2:undefind
+//    fn.call(obj,100,200);//this :obj  num1:100 num2:200
+//
+//    fn.call(); //this :window  num1:undefind num2:undefind  在严格模式下this undefined
+//    fn.call(null); //this :window  num1:undefind num2:undefind  在严格模式下this null
+//    fn.call(undefined); //this :window  num1:undefind// num2:undefind   在严格模式下this undefined
+
+    /**
+     *  apply 和call 方法的作用是一模样的 都是用来改变的方法的this关键字，并且把方法执行，；并且在严格模式下和非严格模式下对于第一个参数是null/undefined 这种情况的规定也是一样
+     *
+     *  call  给fn 传递参数时候 是一个个传递值得，而apply 不是一个个传得，而是参数放在一个数组中进行操作
+     * */
+    fn.apply(null,[100,200]);
+
+    /***
+     *  bind:  在 ie 6-8 下不兼容
+     *      和call 和apply 类似 都是用来改变this 关键字
+     * **/
+
+    // 预处理： 事先把 fn的this 改变我们想要的结果，并且把对应的参数准备好，以后用到，直接执行即可
+    fn.bind(null,1,2)();  // 执行fn 的this 为obj 并且给fn传递两个参数，但此时并没有把这个函数执行，；执行bind会有一个返回值； 这个返回值 tempfn 就是我们fn 改变this 后的结果
+
+
+</script>
+
+</body>
+</html>

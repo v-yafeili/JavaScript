@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数组中中的最大值最小值</title>
+</head>
+<body>
+
+<script>
+     var ary = [23,48,24,12,9,77,64]
+    //1 排序
+    ary.sort(function (a,b) {
+        return a-b;
+    });
+
+    // 2.Math 中max /min 方法；
+    var min =Math.min(ary);
+    console.log(min);
+    console.log(Math.min(23,48,24,12,9,77,64));
+
+     Math.min.apply(null,ary);
+</script>
+
+</body>
+</html>
