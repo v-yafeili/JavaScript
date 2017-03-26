@@ -1,0 +1,46 @@
+@charset "utf-8";
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "微软雅黑";
+    font-size: 14px;
+    -webkit-user-select: none;/*禁止用户选择*/
+}
+.box {
+    margin: 20px auto;  /* 水平居中*/
+    padding: 20px;
+    width: 400px;
+    border: 1px solid #008000;
+
+    border-radius: 10px;   /*圆角*/
+    box-shadow:3px 3px 10px 0 #84ff66; /*阴影*/
+}
+
+.box thead{
+    background: green;
+    color: white;
+}
+
+.box thead tr{
+    height: 35px;
+}
+
+.box thead tr th{
+    text-align: center;
+    width: 100px;
+}
+
+.box tbody tr{
+    height: 30px;
+}
+.box tbody tr.bg{
+    background-color: aqua;
+}
+
+.box tbody tr td{
+    width: 100px;
+    text-align: center;
+}
+
+

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表格排序dom 映射</title>
+</head>
+<body>
+<div>
+    <ui id="uid">
+        <li>99</li>
+        <li>100</li>
+        <li>92</li>
+        <li>97</li>
+        <li>991</li>
+        <li>98</li>
+    </ui>
+</div>
+<script>
+    var uid = document.getElementById("uid");
+    var oLis = uid.getElementsByTagName('li');
+
+    console.log(oLis.length);  //6
+    var oli = document.createElement('li');
+    uid.appendChild(oli);
+
+    console.log(oLis.length); //7
+
+    // 1. 先把元素集合类数组转换数组
+    var ary =Array.prototype.slice.call(oLis);
+
+    // 2 排序
+    ary.sort(function (a,b) {
+        return parseFloat(a.innerHTML) -parseFloat(b.innerHTML);
+
+    });
+    console.log(ary);
+
+    // 3. 按照ary 中存储的最新顺序添加到添加到页面中
+
+    var frg = document.createDocumentFragment();
+    for (var i=0;i<ary.length; i++){
+        frg.appendChild(ary[i]);
+    }
+    uid.appendChild(frg);
+    frg = null;
+
+    /***
+     *  DOM  的映射机制: 页面中的标签和js 中获取到的元素对象（元素集合）是紧紧绑定到一起的，页面中的html的结构改变了，JS 中不需要重新获取，集合里面的数据会自动改变
+     */
+</script>
+</body>
+</html>
