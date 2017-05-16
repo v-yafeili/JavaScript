@@ -1,0 +1,814 @@
+
+<html data-ng-app="testApp" id="ng-app">
+<head>
+
+    <link rel="stylesheet" href="lib/css/bootstrap.css" />
+    <link rel="stylesheet" href="lib/css/font-awesome.css" />
+    <script type="text/javascript" src="lib/js/angular.js"></script>
+    <script type="text/javascript" src="lib/js/underscore.js"></script>
+    <script type="text/javascript" src="lib/js/qrcode.js"></script>
+    <script type="text/javascript" src="lib/js/angular-qrcode.js"></script>
+
+    <style type="text/css">
+        * {
+            font-family: '微软雅黑'
+        }
+
+        input {
+            margin: 5px 0 5px 0;
+        }
+
+        .control-group label {
+            line-height: 44px;
+        }
+
+        .datasource-list {
+            cursor: pointer;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+    </style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+<div class="container" ng-controller="collectCtrl"
+     style="margin-top: 30px;">
+    <div class="col-md-8 col-md-offset-2 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>淘宝二维码登录演示页面</strong>
+            </div>
+            <div class="panel-body">
+
+                <!--loadding begin-->
+                <div class="col-md-10 col-md-offset-1"
+                     ng-show="testVm.datasourcesLoaded">
+                    <div class="row text-center">
+                        <i class="text-info fa fa-5x fa-spinner fa-spin"></i>
+                        <h4 class="text-info">
+                            <strong>正在初始化数据</strong>
+                        </h4>
+                    </div>
+                </div>
+                <!--loadding end-->
+                <div class="col-md-10 col-md-offset-1"
+                     ng-show="testVm.currentStep == 'Login'">
+                    <label class="col-md-3 text-right">请选择登录模式:</label>
+                    <div class="col-md-9">
+                        <!--
+                        <label class="radio-inline"> <input type="radio"
+                                                            name="loginType" value="account"
+                                                            ng-model="testVm.reqMsg.loginType"> 账号密码登录
+                        </label>
+                         -->
+                        <label class="radio-inline"> <input type="radio"
+                                                            name="loginType" value="qrcode"
+                                                            ng-model="testVm.reqMsg.loginType"> 二维码登录
+                        </label>
+                    </div>
+                </div>
+
+                <!--step1-->
+                <div class="col-md-10 col-md-offset-1"
+                     ng-show="testVm.currentStep == 'Login' && testVm.reqMsg.loginType == 'qrcode'">
+                    <div class="row">
+                        <div class="control-group">
+                            <label class="col-md-3 text-right">当前网站:</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" readonly="true"
+                                       ng-model="testVm.currentWebsite">
+                                <!-- <input type="text" class="form-control" readonly="true" ng-model="testVm.currentWebsiteDisplayName"> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="control-group">
+                            <label class="col-md-3 text-right">机构账号</label>
+                            <div class="col-md-9">
+                                <input type="text" ng-model=testVm.orgAcc class="form-control"
+                                       placeholder="请输入机构账号" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="control-group">
+                            <label class="col-md-3 text-right">姓名:</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control"
+                                       ng-model="testVm.reqMsg.apply_info.basic_info.name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="control-group">
+                            <label class="col-md-3 text-right">手机号码:</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control"
+                                       ng-model="testVm.reqMsg.apply_info.basic_info.cell_phone_num">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="control-group">
+                            <label class="col-md-3 text-right">身份证号码:</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control"
+                                       ng-model="testVm.reqMsg.apply_info.basic_info.id_card_num">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="control-group">
+                            <label class="col-md-3 text-right">淘宝账号:</label>
+                            <div class="col-md-9">
+                                <input ng-if="!testVm.accountEditable" type="text"
+                                       class="form-control" readonly ng-model="testVm.reqMsg.account">
+                                <input ng-if="testVm.accountEditable" type="text"
+                                       class="form-control" ng-model="testVm.reqMsg.account">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="control-group">
+                            <label class="col-md-3 text-right">账号密码:</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control"
+                                       ng-model="testVm.reqMsg.password" >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-if="!testVm.processLoadding">
+                        <button ng-if="testVm.currentTask == 'LOGIN'"
+                                ng-click="testVm.generateToken()"
+                                class="col-md-12 btn btn-primary col-xs-12">获取二维码</button>
+                    </div>
+
+                </div>
+
+                <div ng-show="testVm.currentStep === 'getQrcode'">
+                    <label class="col-md-3 text-right"></label>
+                    <div class="col-md-9">
+                        <img src={{testVm.qrcodeData}} height="300" width="300" alt="">
+                    </div>
+                    <div class="col-md-10 col-md-offset-1">
+                        <div class="row" ng-if="!testVm.processLoadding">
+                            <button ng-click="testVm.resendQrcode()"
+                                    class="col-md-12 btn btn-primary col-xs-12">重新获取二维码</button>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-10">
+                            <qrcode version="4" error-correction-level="M" size="260" data="{{testVm.qrcodeData}}"></qrcode>
+                        </div> -->
+                </div>
+                <div class="col-md-10 col-md-offset-1"
+                     ng-show="testVm.currentStep == 'Login' && testVm.reqMsg.loginType == 'account'">
+                    <form name="authForm">
+                        <div class="row">
+                            <div class="control-group">
+                                <label class="col-md-3 text-right">当前网站:</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" readonly="true"
+                                           ng-model="testVm.currentWebsite">
+                                    <!-- <input type="text" class="form-control" readonly="true" ng-model="testVm.currentWebsiteDisplayName"> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="control-group">
+                                <label class="col-md-3 text-right">机构账号</label>
+                                <div class="col-md-9">
+                                    <input type="text" ng-model=testVm.orgAcc class="form-control"
+                                           placeholder="请输入机构账号" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="control-group">
+                                <label class="col-md-3 text-right">姓名:</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control"
+                                           ng-model="testVm.reqMsg.apply_info.basic_info.name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="control-group">
+                                <label class="col-md-3 text-right">手机号码:</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control"
+                                           ng-model="testVm.reqMsg.apply_info.basic_info.cell_phone_num">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="control-group">
+                                <label class="col-md-3 text-right">身份证号码:</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control"
+                                           ng-model="testVm.reqMsg.apply_info.basic_info.id_card_num">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="control-group">
+                                <label class="col-md-3 text-right">邮箱账号:</label>
+                                <div class="col-md-9">
+                                    <input ng-if="!testVm.accountEditable" type="text"
+                                           class="form-control" readonly ng-model="testVm.reqMsg.email">
+                                    <input ng-if="testVm.accountEditable" type="text"
+                                           class="form-control" ng-model="testVm.reqMsg.email">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="control-group">
+                                <label class="col-md-3 text-right">邮箱密码:</label>
+                                <div class="col-md-9">
+                                    <input type="password" class="form-control"
+                                           ng-model="testVm.reqMsg.password">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="control-group">
+                                <label class="col-md-3 text-right">独立密码:</label>
+                                <div class="col-md-9">
+                                    <input type="password" class="form-control"
+                                           ng-model="testVm.reqMsg.identity" placeholder="邮箱独立密码(选填)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" ng-if="!testVm.processLoadding">
+                            <button ng-if="testVm.currentTask == 'LOGIN'"
+                                    ng-disabled="authForm.$invalid"
+                                    ng-click="testVm.generateToken()"
+                                    class="col-md-12 btn btn-primary col-xs-12">开始采集</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!--step2-->
+                <div class="col-md-10 col-md-offset-1"
+                     ng-show="testVm.currentStep == 'finish'">
+                    <div class="row text-center">
+                        <i class="text-success fa fa-5x fa-check-circle"></i>
+                        <h4 class="text-success">
+                            <strong>采集完成</strong>
+                        </h4>
+                        <hr />
+                        <p class="alert alert-success">信息采集完毕</p>
+                    </div>
+                </div>
+
+                <div class="col-md-10 col-md-offset-1"
+                     ng-show="testVm.currentStep == 'resendCollect'">
+                    <div class="row">
+                        <div class="control-group"
+                             ng-if="testVm.currentTask == 'resendPassword'">
+                            <label class="col-md-3 text-right">邮箱密码:</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control"
+                                       ng-model="testVm.reqMsg.password">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="control-group"
+                             ng-if="testVm.currentTask == 'resendIdentity'">
+                            <label class="col-md-3 text-right">独立密码:</label>
+                            <div class="col-md-9">
+                                <input type="password" class="form-control"
+                                       ng-model="testVm.reqMsg.identity" placeholder="邮箱独立密码(选填)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-if="!testVm.processLoadding">
+                        <button ng-click="testVm.websiteLogin()"
+                                class="col-md-12 btn btn-primary col-xs-12">开始采集</button>
+                    </div>
+                </div>
+
+
+                <div class="col-md-10 col-md-offset-1"
+                     ng-show="testVm.currentStep == 'error'">
+                    <div class="row text-center">
+                        <i class="text-danger fa fa-5x fa-remove"></i>
+                        <h4 class="text-danger">
+                            <strong>{{testVm.fatalErrorMsg}}</strong>
+                        </h4>
+                        <hr />
+                        <p class="alert alert-danger">对不起，采集失败</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-footer" style="overflow: auto;">
+
+                <strong ng-if="testVm.processLoadding" class="text-info"
+                        style="display: inline-block; float: left;"> <i
+                        class="fa fa-spinner fa-spin" style="margin-right: 10px;"></i>正在获取...
+                </strong> <strong ng-if="testVm.tipMsg" class="text-success">{{testVm.tipMsg}}</strong>
+                <strong ng-if="testVm.controlMsg && testVm.currentTask != 'FINISH'"
+                        class="text-info">{{testVm.controlMsg}}</strong> <strong
+                    ng-if="testVm.errorMsg" class="text-danger">{{testVm.errorMsg}}</strong>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+    var app = angular.module('testApp', []);
+    //var __orgAccount = "demo2";
+    var __baseApi = "rest/v3/";
+    app.controller('collectCtrl', [ '$scope', '$http', '$timeout', '$q', function($scope, $http, $timeout, $q) {
+        var testVm = $scope.testVm = {};
+        testVm.accountEditable = true;
+        testVm.resetPwdMethod = 0;
+        testVm.resetPwd = false;
+        testVm.supportCategories = [];
+        testVm.qrcodeData = "";
+        testVm.orgAcc = null;
+        //请求消息
+        var defaultReqMsg = {
+            token : "",
+            apply_info : {
+
+            },
+            account : "",
+            password : "",
+            identity : "",
+            loginType : ""
+        }
+
+        //请求消息类型
+        testVm.reqMsgType = {
+            submitPwd : "SUBMIT_PWD", // 提交密码
+            /* submitCollectCaptcha:"SUBMIT_CAPTCHA", // 提交独立密码 */
+        };
+
+        //申请信息
+        testVm.apply_info = {
+            selected_website : [],
+            basic_info : {
+                name : "",
+                id_card_num : "",
+                cell_phone_num : ""
+            }
+        }
+
+        $scope.$watch('testVm.qrcodeData', function() {
+            if (testVm.qrcodeData.length > 0) {
+                testVm.getQrcodeCollectResponse(120);
+            }
+        });
+
+        testVm.ApiURL = {
+            getToken : __baseApi + "taobao/applications/",
+            collectReq : __baseApi + "taobao/message/collect/req/",//采集请求
+            collectResp : __baseApi + "taobao/messages/qrcodeCollect/resp",
+        }
+
+        testVm.task = {
+            inputPwd : "inputPwd"
+
+        }
+
+        testVm.currentStep = "Login";
+        testVm.currentTask = "LOGIN";
+        //当前抓取的网站
+        testVm.currentWebsiteDisplayName = "淘宝";
+        testVm.currentWebsite = "淘宝数据";
+        testVm.datasourcesLoaded = false;
+        // 机构支持的数据源
+        testVm.selectedDatasourceKeys = [];
+
+        testVm.reqMsg = angular.copy(defaultReqMsg);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        // 业务代码  开始
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //1.生成token
+        testVm.generateToken = function() {
+            var url = testVm.ApiURL.getToken + testVm.orgAcc;
+
+            $http.post(url, testVm.reqMsg).success(function(data) {
+                console.log("# 生成token 返回值 ==>", data);
+                if (data.success) {
+                    console.log(testVm.reqMsg);
+                    // 显示 登录界面
+                    // 设置 token
+                    testVm.reqMsg.token = data.data.token;
+                    console.log("# 请求消息为", testVm.reqMsg);
+                    console.log("# 设置当前任务为：登录");
+                    testVm.websiteLogin();
+                } else {
+                    testVm.fatalErrorMsg = data.message;
+                    testVm.currentStep = 'error';
+                }
+            }).error(function(data, status) {
+                console.log("error");
+            })
+
+        }
+
+        testVm.websiteLogin = function() {
+
+            testVm.processLoadding = true;
+
+            testVm.sendCollectReq().then(function(data) {
+                console.log("==========================");
+                console.log(data);
+                console.log("==========================");
+                testVm.getCollectResponse(data, 120);
+            }, function(data) {
+                testVm.currentStep = 'error';
+                testVm.errorMsg = data.message;
+                testVm.processLoadding = false;
+            })
+
+        }
+
+        testVm.resendQrcode = function () {
+            testVm.errorMsg = null;
+            testVm.controlMsg = null;
+            testVm.generateToken();
+        }
+
+        testVm.returnLogin = function() {
+            testVm.resetPwd = false;
+            //清除原来输入的 动态密码
+            testVm.reqMsg.captcha = "";
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        // 业务代码  结束
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        testVm.sendCollectReq = function() {
+            var deferred = $q.defer();
+            var url = testVm.ApiURL.collectReq + testVm.orgAcc;
+
+            console.log("# 请求URL为" + url, " 请求内容为 ", testVm.reqMsg);
+            $http.post(url, testVm.reqMsg).success(function(data, status) {
+                console.log("#提交采集请求返回值 ==>", data);
+                if (data.data) {
+                    console.log("# 发送交互请求成功！");
+                    deferred.resolve(data);
+                } else {
+                    console.log("# 发送交互请求失败！");
+                    deferred.reject(data);
+                }
+
+            }).error(function(data, status) {
+                deferred.reject(data);
+
+                return deferred.promise;
+            })
+
+            return deferred.promise;
+
+        }
+
+        testVm.getQrcodeCollectResponse = function(data, times) {
+            var url = testVm.ApiURL.collectResp;
+            $http.post(url, testVm.reqMsg).success(function(data, status) {
+                console.log(data);
+                if (data.data) {
+                    testVm.respMsg = data.data;
+                    console.log("# log === >" + data.data.content);
+                    // if(data.data.content.indexOf("密码错误") != -1){
+                    //     testVm.currentTask = "input_passwod";
+                    // }
+
+                    if (data.data.content) {
+
+                        // 对于返回信息的逻辑处理  ==》 开始
+                        if (data.data.type == 'CONTROL') {
+                            testVm.controlMsg = data.data.content;
+
+                            //前端交互流程完成
+                            if (data.data.process_code === 10008) {
+                                //流程结束标识
+
+                                if (data.data.finish) {
+
+                                    console.log("==================================");
+                                    console.log("采集完成");
+                                    console.log("初始化请求数据");
+                                    testVm.reqMsg.account = '';
+                                    testVm.reqMsg.password = '';
+                                    console.log("==================================");
+                                    testVm.currentStep = 'finish';
+
+                                }
+                            } else if(data.data.process_code === 10112){
+                                testVm.qrcodeData = data.data.content.split("_")[1];
+                                testVm.controlMsg = data.data.content.split("_")[0];
+                                testVm.currentStep = 'getQrcode';
+                            } else if (data.data.content.indexOf("独立密码错误") != -1) {
+                                testVm.errorMsg = null;
+                                testVm.controlMsg = data.data.content;
+                                testVm.tipMsg = null;
+                                testVm.currentStep = 'resendCollect';
+                                testVm.currentTask = 'resendIdentity';
+                            }
+                            testVm.errorMsg = null;
+                            testVm.tipMsg = null;
+                        } else if (data.data.type == 'ERROR') {
+                            testVm.errorMsg = data.data.content;
+                            testVm.controlMsg = null;
+                            testVm.tipMsg = null;
+                        } else if (data.data.type == 'TIP') {
+                            testVm.tipMsg = data.data.content;
+
+                            testVm.controlMsg = null;
+                            testVm.errorMsg = null;
+                        }
+
+                        testVm.processLoadding = true;
+
+                        // 除了TIP以外的类型均属于 打断流程的消息
+                        if (data.data.type != 'TIP') {
+                            times = 0;
+                            testVm.processLoadding = false;
+                        }
+
+                        // 对于返回信息的逻辑处理  ==》 结束
+                    }
+                }
+
+                if (--times > 0) {
+                    console.log('当前第' + times + '次获取采集服务响应信息：', data.data)
+                    testVm.getQrcodeCollectResponse(times);
+                }
+            }).error(function(error) {
+                console.log(error);
+            })
+        }
+
+        testVm.getCollectResponse = function(data, times) {
+            console.log(data);
+            if (data.data) {
+                testVm.respMsg = data.data;
+                console.log("# log === >" + data.data.content);
+                // if(data.data.content.indexOf("密码错误") != -1){
+                //     testVm.currentTask = "input_passwod";
+                // }
+                if (data.data.content) {
+
+                    // 对于返回信息的逻辑处理  ==》 开始
+                    if (data.data.type == 'CONTROL') {
+                        testVm.controlMsg = data.data.content;
+                        //前端交互流程完成
+                        if (data.data.process_code === 10008) {
+                            testVm.controlMsg = data.data.content;
+                            //流程结束标识
+                            console.log("==================================");
+                            console.log("采集完成");
+                            console.log("初始化请求数据");
+                            testVm.reqMsg.account = '';
+                            testVm.reqMsg.password = '';
+                            console.log("==================================");
+                            testVm.currentStep = 'finish';
+                            testVm.currentTask = 'FINISH';
+                        }
+                        else if (data.data.process_code === 10111) {
+                            testVm.qrcodeData = data.data.content.split("_")[1];
+                            testVm.controlMsg = data.data.content.split("_")[0];
+                            testVm.currentStep = 'getQrcode';
+                        } else if (data.data.content.indexOf("独立密码错误") != -1) {
+                            testVm.currentStep = 'resendCollect';
+                            testVm.currentTask = 'resendIdentity';
+                        } else if (data.data.content.indexOf("密码错误") != -1) {
+                            testVm.currentStep = 'resendCollect';
+                            testVm.currentTask = 'resendPassword';
+                        } else if (data.data.process_code === 10013) {
+                            testVm.getQrcodeCollectResponse(60);
+                        } else if (data.data.process_code === 10016) {
+                            testVm.getQrcodeCollectResponse(60);
+                        }
+                        testVm.errorMsg = null;
+                        testVm.tipMsg = null;
+                    } else if (data.data.type == 'ERROR') {
+                        testVm.errorMsg = data.data.content;
+                        testVm.controlMsg = null;
+                        testVm.tipMsg = null;
+                    } else if (data.data.type == 'TIP') {
+                        testVm.tipMsg = data.data.content;
+
+                        testVm.controlMsg = null;
+                        testVm.errorMsg = null;
+                    }
+
+                    testVm.processLoadding = true;
+
+                    // 除了TIP以外的类型均属于 打断流程的消息
+                    if (data.data.type != 'TIP') {
+                        times = 0;
+                        testVm.processLoadding = false;
+                    }
+                    // 对于返回信息的逻辑处理  ==》 结束
+                }
+            }
+
+            if (--times > 0) {
+                console.log('当前第' + times + '次获取采集服务响应信息：', data.data)
+                testVm.getCollectResponse(times);
+            }
+        }
+
+        testVm.containCategory = function(categories, category) {
+            return _.contains(categories, category);
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+    } ]);
+
+    app
+            .directive(
+                    'qrcode',
+                    [
+                        '$window',
+                        function($window) {
+
+                            var canvas2D = !!$window.CanvasRenderingContext2D, levels = {
+                                'L' : 'Low',
+                                'M' : 'Medium',
+                                'Q' : 'Quartile',
+                                'H' : 'High'
+                            }, draw = function(context, qr, modules, tile) {
+                                for (var row = 0; row < modules; row++) {
+                                    for (var col = 0; col < modules; col++) {
+                                        var w = (Math.ceil((col + 1) * tile) - Math.floor(col * tile)), h = (Math
+                                                .ceil((row + 1) * tile) - Math.floor(row * tile));
+
+                                        context.fillStyle = qr.isDark(row, col) ? '#000' : '#fff';
+                                        context.fillRect(Math.round(col * tile), Math.round(row * tile), w, h);
+                                    }
+                                }
+                            };
+
+                            return {
+                                restrict : 'E',
+                                template : '<canvas class="qrcode"></canvas>',
+                                link : function(scope, element, attrs) {
+                                    var domElement = element[0], $canvas = element.find('canvas'), canvas = $canvas[0], context = canvas2D ? canvas
+                                            .getContext('2d')
+                                            : null, download = 'download' in attrs, href = attrs.href, link = download || href ? document
+                                            .createElement('a')
+                                            : '', trim = /^\s+|\s+$/g, error, version, errorCorrectionLevel, data, size, modules, tile, qr, $img, setVersion = function(
+                                            value) {
+                                        version = Math.max(1, Math.min(parseInt(value, 10), 10)) || 4;
+                                    }, setErrorCorrectionLevel = function(value) {
+                                        errorCorrectionLevel = value in levels ? value : 'M';
+                                    }, setData = function(value) {
+                                        if (!value) {
+                                            return;
+                                        }
+
+                                        data = value.replace(trim, '');
+                                        qr = qrcode(version, errorCorrectionLevel);
+                                        qr.addData(data);
+
+                                        try {
+                                            qr.make();
+                                        } catch (e) {
+                                            error = e.message;
+                                            return;
+                                        }
+
+                                        error = false;
+                                        modules = qr.getModuleCount();
+                                    }, setSize = function(value) {
+                                        size = parseInt(value, 10) || modules * 2;
+                                        tile = size / modules;
+                                        canvas.width = canvas.height = size;
+                                    }, render = function() {
+                                        if (!qr) {
+                                            return;
+                                        }
+
+                                        if (error) {
+                                            if (link) {
+                                                link.removeAttribute('download');
+                                                link.title = '';
+                                                link.href = '#_';
+                                            }
+                                            if (!canvas2D) {
+                                                domElement.innerHTML = '<img src width="' + size + '"' +
+                                                        'height="' + size + '"' +
+                                                        'class="qrcode">';
+                                            }
+                                            scope.$emit('qrcode:error', error);
+                                            return;
+                                        }
+
+                                        if (download) {
+                                            domElement.download = 'qrcode.png';
+                                            domElement.title = 'Download QR code';
+                                        }
+
+                                        if (canvas2D) {
+                                            draw(context, qr, modules, tile);
+
+                                            if (download) {
+                                                domElement.href = canvas.toDataURL('image/png');
+                                                return;
+                                            }
+                                        } else {
+                                            domElement.innerHTML = qr.createImgTag(tile, 0);
+                                            $img = element.find('img');
+                                            $img.addClass('qrcode');
+
+                                            if (download) {
+                                                domElement.href = $img[0].src;
+                                                return;
+                                            }
+                                        }
+
+                                        if (href) {
+                                            domElement.href = href;
+                                        }
+                                    };
+
+                                    if (link) {
+                                        link.className = 'qrcode-link';
+                                        $canvas.wrap(link);
+                                        domElement = link;
+                                    }
+
+                                    setVersion(attrs.version);
+                                    setErrorCorrectionLevel(attrs.errorCorrectionLevel);
+                                    setSize(attrs.size);
+
+                                    attrs.$observe('version', function(value) {
+                                        if (!value) {
+                                            return;
+                                        }
+
+                                        setVersion(value);
+                                        setData(data);
+                                        setSize(size);
+                                        render();
+                                    });
+
+                                    attrs.$observe('errorCorrectionLevel', function(value) {
+                                        if (!value) {
+                                            return;
+                                        }
+
+                                        setErrorCorrectionLevel(value);
+                                        setData(data);
+                                        setSize(size);
+                                        render();
+                                    });
+
+                                    attrs.$observe('data', function(value) {
+                                        if (!value) {
+                                            return;
+                                        }
+
+                                        setData(value);
+                                        setSize(size);
+                                        render();
+                                    });
+
+                                    attrs.$observe('size', function(value) {
+                                        if (!value) {
+                                            return;
+                                        }
+
+                                        setSize(value);
+                                        render();
+                                    });
+
+                                    attrs.$observe('href', function(value) {
+                                        if (!value) {
+                                            return;
+                                        }
+
+                                        href = value;
+                                        render();
+                                    });
+                                }
+                            };
+                        } ]);
+</script>
+</html>

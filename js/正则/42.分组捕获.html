@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>42.分组捕获</title>
+</head>
+<body>
+<script>
+    //正则分组
+//    1.改变优先级
+//    2 分组引用
+
+
+//    \2 代表和第二个分组出现一模一样的内容；\1 和第一个分组出现一模一样的内容
+//     一模一样 ：和对应分组中的内容的值都要一模一样
+    var reg = /^(\w)\1(\w)\2$/;
+    console.log(reg.test('zzff'))   //true
+    console.log(reg.test('z0f_'))   //false
+
+//    分组捕获： -》 正则捕获的时候，不仅把大正则的内容捕获到，而且还可以吧小分组的内容捕获到
+// (?:)  在分组中?: 的意思是只匹配不捕获
+    var regidcard2 = /^(\d{2})(\d{4})(\d{4})(\d{2})(\d{2})(?:\d{2})(\d)(\d|X)$/;
+    var idcard = '410728199009140512';
+    console.log(regidcard2.exec(idcard));
+    console.log(idcard.match(regidcard2));
+    //数组中的第一项 就是大正则匹配的内容
+    // ary[1] => 第一个分组捕获的内容
+//    ...
+</script>
+</body>
+</html>

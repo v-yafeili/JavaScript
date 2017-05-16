@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>浏览器滚动条卷去的高度(SCROLLTOP</title>
+    <style type="text/css">
+        /* 写css 第一写默认样式，避免浏览器不兼容
+        */
+        *{
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+        #box{
+            margin: 100px;
+            padding: 30px;
+            width: 200px;
+            height: 100px;
+            border: 10px solid red;
+            line-height: 20px;
+            overflow: auto;
+
+            /*opacity: 0.1;*/
+            /*设置 透明度 ie 6-8 不兼容*/
+            /*filter: alpha(opacity=10);*/
+            /*overflow: hidden;*/
+
+        }
+        </style>
+</head>
+<body>
+<div id="box">
+    dsfdsfljsdfksddddddd
+    dddddddddddddddsdfdsfds
+    ddddddddddddddddddd
+    dddddddddddddddddd
+    dsfdsfljsdfksddddddd
+    dddddddddddddddsdfdsfds
+    ddddddddddddddddddd
+    dddddddddddddddddd
+    dsfdsfljsdfksddddddd
+    dddddddddddddddsdfdsfds
+    ddddddddddddddddddd
+    dddddddddddddddddd
+    dsfdsfljsdfksddddddd
+    dddddddddddddddsdfdsfds
+    ddddddddddddddddddd
+    dddddddddddddddddd
+    dsfdsfljsdfksddddddd
+    dddddddddddddddsdfdsfds
+    ddddddddddddddddddd
+    dddddddddddddddddd
+    dsfdsfljsdfksddddddd
+    dddddddddddddddsdfdsfds
+    ddddddddddddddddddd
+    dddddddddddddddddd
+</div>
+<script>
+    var box = document.getElementById('box');
+//    我们之前学习的js 盒子模型中 client 系列/offset 系列 .scrollWidth 、scrollHeight 都是 只读属性
+//    scrollTop/ scrllLeft : 滚动条卷去得高度和宽度
+//    box.scrollTop =0   回到容器顶部
+//    scrollTop 存在最大和最下值
+    box.scrollTop =-1000
+//    最小值是0
+//    最大值 （真实的高度- 当前容器一屏高度）；
+    var maxTop =box.scrollHeight -box.clientHeight;
+</script>
+
+</body>
+</html>

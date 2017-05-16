@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>44 正则捕获专题</title>
+</head>
+<body>
+<script>
+// 分组捕获
+    var str = 'my name is {0},my age is {1},i come from  {2}, i love {3}';
+    var ary = ['中午',20,'湖南','js'];
+    var  reg =/\{(\d+)\}/g;
+    console.log(reg.exec(str));
+    str =str.replace(reg,function () {
+        console.log(arguments);
+        return ary[arguments[1]];
+    });
+    console.log(str);
+</script>
+</body>
+</html>

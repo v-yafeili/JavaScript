@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>52伪类的应用</title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: '微软雅黑';
+            font-size: 14px;
+        }
+        .box{
+            width: 300px;
+            margin: 20px auto;
+            padding: 30px;
+            border: 1px dashed green;
+        }
+        .box p{
+            line-height:30px;
+        }
+        /* :before :after  在一个元素的标签的前面后者后面创建一个虚拟的标签，我们可以给这个虚拟的标签增加样式，也可以增加内容*/
+        .box p:before{
+            display: block;
+            height:30px;
+            text-align: center;
+            content: '珠峰培训';
+            background-color: lightblue;
+
+        }
+        .box p:after{
+            display: block;
+            height:30px;
+            text-align: center;
+            content: '珠峰培训';
+            background-color: chartreuse;
+        }
+
+    </style>
+</head> 
+<body>
+<div id="box" class="box">
+    <p>
+        担心学不会
+
+        我们是先学习再考试,考试通过了才交学费;珠峰有完善的教学管理,考试和激励引导制度帮你不但学的会还要学的好!
+    </p>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>43replace</title>
+</head>
+<body>
+<script>
+    //replace ：把原有的字符替换成新字符
+    var str = 'zhufeng124zhufeng456';
+//    str = str.replace('zhufeng','zhufengpeixun').replace('zhufeng','zhufengpeixun');
+   // str = str.replace(/zhufeng/g,'zhufengpeixun');
+
+
+    console.log(str);
+
+    // repalce 第一项值是一个正则实现原理
+    /**
+     * 1: 按照 /zhufeng/g 把 str 中所有的匹配到都捕获到，然后统一替换
+     * */
+    str = str.replace(/zhufeng/g,function () {
+        console.log(arguments);
+        console.log('ok')
+        return '珠峰培训';
+    });
+
+
+
+    // 第二个参数换成一个函数
+    // 匿名函数执行多少次，取决于正则能在字符串中捕获多少次
+    // 每一次执执行匿名函数，里面传递的参数值 argumentes 和我们自己通过exec 捕获的节后是非常类似（即使有分组，我们同样通过arguments 分组捕获到）
+    // return .: 返回的结果是什么，就相当于吧当前这次大正则捕获到的内容替换成你返回的内容
+    // RegExp.$1  获取第一个分组的内容
+</script>
+</body>
+</html>

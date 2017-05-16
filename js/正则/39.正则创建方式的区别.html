@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>39：正则创建方式的区别</title>
+</head>
+<body>3
+<script>
+    var name = 'zhufeng';
+
+    var reg = /^\d+"+name+"\d+$/;
+    console.log(reg.test('2015zhufeng2016'));
+    // 对于这样的的需求 我们只能使用实例创建
+
+    var newreg =new RegExp('^\\d+'+name +'\\d+$','g');
+    console.log(newreg.test('2015zhufeng2016'));
+    /**
+     * 1） 在字面量方式中，我们用// 之间包起来的所有内容都是元字符，有具有特殊意义，大部分都代表本身的普通的元字符
+     * */
+    //区别
+    /**
+     * 1) 字面量方式中出现的一切都是元字符，所有不能进行变量值的拼接，而实例创建的方式是可以的
+     * 2） 字面量方式中之直接写\d就可以，而在实例中需要把它转译 \\d
+     *
+     * */
+
+
+</script>
+</body>
+</html>

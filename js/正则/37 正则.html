@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>正则作用</title>
+</head>
+<body>
+<script type="text/javascript">
+    // 正则：它既是一个规则，用来处理一个字符串的规则（正则就是用来处理字符串）
+    /**
+     *  1: 匹配 判断一个字符串是否符合我们的制定的规则 test: reg.test(str)
+     * */
+    var reg = /\d/; // 包含一个0-9 之间的数字
+    console.log(reg.test("珠峰")); // false
+    console.log(reg.test("1")); // true
+    console.log(reg.test("珠峰100")); // true
+
+    /**
+     *  2 捕获 把字符串中符合我们正则规则的内容捕获到 exec ： reg.exec(str)
+     *
+     * */
+    console.log(reg.exec("珠峰")); // false
+    console.log(reg.exec("1")); // true
+    console.log(reg.exec("珠峰100"));
+
+    // 2 创建一个正则
+    // 字面量方式
+    var reg1 = /dfs/ ;
+    // 实例创建
+    var reg2 = new  RegExp("FDFD");
+
+    /**
+     *  将来创建方式的区别
+     * */
+    //3 如何学习正则
+    console.dir(RegExp.prototype);
+
+</script>
+</body>
+</html>

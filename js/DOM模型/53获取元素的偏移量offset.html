@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>53获取元素的偏移量offset</title>
+    <style type="text/css">
+        *{
+            margin: 0px;
+            padding: 0px;
+
+        }
+        #outer{
+            margin: 50px auto;
+            width:  180px;
+            height: 180px;
+            border: 10px solid black;
+            background-color: orange;
+            padding: 50px;
+
+        }
+        #inner{
+            padding: 50px;
+            width: 80px;
+            height: 80px;
+            border: 10px solid black;
+            background-color: red;
+
+        }
+        #center{
+
+            width: 50px;
+            height: 50px;
+            border: 10px solid black;
+            background-color: green;
+
+        }
+    </style>
+</head>
+<body>
+<div id="outer">
+    <div id="inner">
+        <div id="center">
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var outer =document.getElementById('outer'),inner= document.getElementById('inner'), conter = document.getElementById('center');
+
+    //parentNode : 父亲节点  html 结构成绩中上一级元素
+//    conter.parentNode // inner
+//    inner.parentNode // outer
+//    outer.parentNode // body
+    document.parentNode // null
+
+    // 2、 offsetParent： 父级参照物， 在同一平面中，最外层的元素是里面所有元素的父级参照物（和Html 层级没有必然联系）
+    // 一般来说 一个页面中所有父级参照物都是body
+//    conter.offsetParent  //body
+  //  inner.offsetParent // body
+   // outer.offsetParent //body
+//    document.body.offsetParent mull
+
+    // 想要改变父级参照物，需要通过 position 来改变 absolute relative fixed
+//    position: absolute;
+//    position: relative;
+//    position: fixed;
+//    position: static;
+//    position: inherit;
+//      outer.style.position  = 'absolute';
+//    console.log(inner.offsetParent);   //outer
+//    console.log(conter.offsetParent);  //outer
+//    console.log(outer.offsetParent);  //body
+
+// 3、 offsetTop/offsetLeft  当前元素外边框 距离 其父级参照物（内边框）的偏移距离
+
+    /*offset ： 等同于jquery 中offset ，实现获取页面中任意一个元素，距离body的偏移（包含上和左偏移），不断当前参照物是谁*/
+    function  offset(curEle) {
+        var totalTop =null ,totalLeft = null, par  = curEle.offsetParent;
+        totalTop += curEle.offsetTop;
+        totalLeft += curEle.offsetLeft;
+         while (par){
+             totalLeft += par.clientLeft;
+             totalTop += par.clientTop;
+
+             totalLeft += par.offsetLeft;
+             totalTop += par.offsetTop;
+             par  =par.offsetParent;
+
+         }
+         return {left:totalLeft,top:totalTop};
+    }
+    /**
+     * null undefind 都代表没有
+     * null 属性存在是值不存在
+     * undefined  属性不存在
+     *  document.parentNode  (浏览器 天生自带一个属性，父亲节点的属性)
+     *  document.parentnode  undefined  （因为没有parentnode）
+     * */
+
+</script>
+
+</body>
+</html>

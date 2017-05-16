@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>47 数据类型检测</title>
+</head>
+<body>
+<script>
+    // 1 typeof
+    console.log(typeof 12);
+    /**
+     * 使用typeof 检测数据类型，返回的都是字符串，其次返回数据类型 number  string Object  boolean  function
+     *
+     *
+     * 局限性： typeof null  => Object
+     * 不能具体的细分是数组还是正则，还是对象的其他值，都是Object
+     * ***/
+
+
+
+    // 2 instanceof 检测某一个实例是否数以某个类
+    var obj = [12,23];
+//    console.log(obj instanceof  Array);
+//    console.log(obj instanceof  RegExp);
+//    console.log(1 instanceof  Number); //false
+//    console.log(new Number(1) instanceof  Number); //true
+
+    /**
+     *  局限性：
+     *  不能检测 字面量方式的变量
+     *
+     *  对应基本数据类型来说，字面量方式创建出来的结果和实例方式创建出来的结构是有一定区别的，从严格意义来讲只有实例创建出来的结果才是标准的对象的数据类型值;但是由于JS的松散的特点，导致可以使用Number.prototype 上提供的方法
+     *
+     *
+     * instanceof 特性： 只要在当前实例的原型链，我们检测出来就为true
+     *
+   /*  * *!/
+    function  fun() {
+
+    }
+    console.log(fun instanceof  Function);
+    console.log(fun instanceof  Object);*/
+
+    // 3 constructor
+    /**
+     *   作用和 constructor
+     *
+     * constructor 可以处理基本数据类型的检测
+     *  局限性： 我们进行对类重写，这样检测出来的结果就是不准确
+     * */
+    console.log(obj.constructor === Array)
+    console.log((1).constructor === Number)
+    // 4 Object.prototype.toString.calls()
+    /**
+    *  首先获取 Object 原型上toString 让方法执行那个，并且改变方法中的this 关键字指向
+     *
+     *  Object.prototype.toString 它的作用的返回当前方法的执行主体（方法中this）所属类的详细信息
+    * */
+    var obj2 ={name :"lyaf"};
+    console.log(obj2.toString());// [object Object] 第一个object 代表当前实例对象数据类型（这个是固定死的），的二个Object 代表obj 所属类的Object
+
+    //5 toString的理解
+    // 转换为字符串，但是某些 toString 方法不仅仅是转换字符串
+    console.log((1).toString()); // Number.prototype.toString
+    console.log((1).__proto__.__proto__.toString());//Object.prototype.toString [object Object]
+    //console.log((128).toString(2/8/10)); 转化为 二进制
+</script>
+</body>
+</html>

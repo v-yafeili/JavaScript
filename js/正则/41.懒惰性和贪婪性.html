@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>41懒惰性和贪婪性</title>
+</head>
+<body>
+<script>
+    // exec
+    // 捕获到的内容格式
+    // 如果没有获获取到null
+    // 1) 捕获到的内容是一个数组
+    // 数组中的第一项是正则捕获到的内容
+    // index : 捕获到内容字符串索引的位置
+    // input : 捕获的结果是原始字符串
+
+    //2) 正则捕获的特点
+    // 懒惰型 ： 每一次执行exec 只捕获第一个匹配的内容，在不进行任何处理的情况下，在执行多次捕获，捕获还是第一个匹配的内容
+    //lastIndex : 是正则每一次捕获字符串开始查找的位置，默认是 0
+
+//    var reg = /\d+/g;
+//    var str = 'sdfdsfsdfdsfsd13dsfdsfsd56';
+//    console.log(reg.lastIndex);
+//    var res = reg.exec(str);
+//    console.log(res);
+
+    /**
+     *
+     * Array(1)
+     0
+     :
+     "13"
+     index
+     :
+     14
+     input
+     :
+     "sdfdsfsdfdsfsd13dsfdsfsd56"
+     length
+     :
+     1
+
+     */
+    // 如何解决懒惰型 ？ 在正则的末尾增加修饰符"g"
+    // 修饰符： g i、、m
+    // global (g) 全局匹配
+    // ingoreCase(i): 忽略大小匹配
+    // multiline m: 多行匹配
+
+    // 原理： 增加全局修饰符g，在每一次捕获结束后，我们罪行的LastIndex的值就变成最新的值，下一次捕获从最新的位置开始 查找，这样捕获到
+//    //reg =/\d+/g;
+//
+//    //str = 'sdfdsfsdfdsfsd13dsfdsfsd56';
+//    console.log(reg.lastIndex);
+//    var res = reg.exec(str);
+//
+//   // str = 'sdfdsfsdfdsfsd13dsfdsfsd56';
+//    console.log(reg.lastIndex);
+//    var res = reg.exec(str);
+
+
+//    var  ary = [];
+//    var res = reg.exec(str);
+//    while (res){
+//        ary.push(res[0]);
+//        res = reg.exec(str);
+//    }
+//    console.log(ary);
+
+    //贪婪性： 正则的每一次捕获都是按照匹配最长的结果捕获的，例如： 2 符合 2015 也符合 ，捕获到是2015
+
+    // 如何解决正则贪婪性 -》 在量词元字符后面添加一个？ 即可
+
+    var reg = /\d+?/g;
+    var str = 'sdfdsfsdfdsfsd13dsfdsfsd56';
+    console.log(reg.exec(str));
+
+    // ? 在正则有很多作用：
+    // 放在普通的元字符后面代表出现 0-1 次 /\d?/ 数组可能出现也可能不出现
+    // 放在一个量词元字符后面是取消捕获时的贪婪性
+
+
+
+    // 3 字符串 中的match 方法-》 把所有和正则匹配的字符都找到；
+    console.log(str.match(reg));
+
+    // 虽然在当前情况下match 比我们的exec 更加的简便，但是match 存在一些自己处理不了的问题： 在分组捕获的情况下，match只能捕获到大正则匹配的内容，而对于小正则捕获的内容是无法获取的
+</script>
+</body>
+</html>
